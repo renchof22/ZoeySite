@@ -1,46 +1,28 @@
-{% extends 'base.html' %}
+{% extends 'Accounts/base_accounts.html' %}
+
+{% block title %}Log in to e-Social{% endblock %}
+
 {% block content %}
-<div class="container">
-  <h1 class="text-center logo my-4">
-    <a href="{% url 'index.html' %}"> Home</a>
-  </h1>
   <div class="row justify-content-center">
     <div class="col-lg-4 col-md-6 col-sm-8">
       <div class="card">
         <div class="card-body">
-          <h3 class="card-title">ログイン</h3>
+          <h3 class="card-title">Log in</h3>
           <form method="post" novalidate>
             {% csrf_token %}
+            {% include 'includes/form.html' %}
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
           </form>
-          <div class="card-block"> 
-            <form class="my-form" action="{% url 'Accounts:login' %}" method="POST">
-            {% csrf_token %}
-              <div class="row">
-                <div class="form-group col-md-11">
-                  <label for="id_email">メールアドレス</label>
-                  {{ form.username }}
-                  {{ form.username.errors }}
-                  <p class="help-block mb-0">{{ form.username.help_text }}</p>
-                </div>
-                <div class="form-group col-md-11 pb-3">
-                  <label for="id_email">パスワード</label>
-                  {{ form.password }}
-                  {{ form.password.errors }}
-                </div>
-                <div class="form-group col-md-11">
-                  <input type='hidden' name='next' value='{{ next }}' />
-                  <button type="submit" class="btn btn-block btn-outline-primary"> ログイン</button>
-                </div>
-              </div>
-            </form>
-            <div class="card-text">
-              <p class="text-right mb-0"><a class="nav-link" href="#">パスワードを忘れた方</a></p>
-              <p class="text-right mb-0"><a class="nav-link" href="{% url 'Accounts:signup' %}">新規登録会員</a></p>
-            </div><!-- end card-text -->
-          </div>
-        </div><!-- end card-body-->
-      </div><!-- end card-->
+        </div>
+        <div class="card-footer text-muted text-center">
+          New to e-Social? <a href="{% url 'Accounts:signup' %}">Sign up</a>
+        </div>
+      </div>
+      <div class="text-center py-2">
+        <small>
+          <a href="#" class="text-muted">Forgot your password?</a>
+        </small>
+      </div>
     </div>
-  </div><!-- end container-fluid -->
-</div><!-- end container-fluid-->
+  </div>
 {% endblock %}
