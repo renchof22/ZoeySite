@@ -12,8 +12,12 @@ from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
+
+from django.utils.decorators import method_decorator
+from django.views.generic import UpdateView
+
 from django.contrib.auth import get_user_model
-# User = get_user_model()
+User = get_user_model()
 
 
 # ユーザー登録ページ
@@ -64,3 +68,15 @@ def regist_save(request):
         'form': form,
     }
     return render(request, 'signup.html', context)
+
+
+# アカウント情報編集ページ
+@method_decorator(login_required, name='dispatch')
+class UserUpdateView(UpdateView):
+    model = User
+    fields = ('username', 'email')
+    template_name = 'Accounts/my_account.html'
+    success_url = reverse_lazy('Accounts:my_account')
+
+    def get_object(self):
+        return self.request.user
