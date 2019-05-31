@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Accounts',
-    'widget_tweaks'
+    'widget_tweaks',
+    'imagekit',
+    'Board'
 ]
 
 MIDDLEWARE = [
@@ -132,3 +134,10 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_URL = 'Accounts:login'
+
+# サーバから見たメディアルートの絶対パス
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# メディアファイル公開時のＵURLプレフィックス。
+# http://アプリドメイン+MEDIA_URL+メディアファイル名
+MEDIA_URL = '/media/'

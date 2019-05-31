@@ -33,6 +33,7 @@ class SignUpForm(UserCreationForm):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['username'].widget.attrs['placeholder'] = 'ユーザーネーム'
 
+
 # ログインフォーム
 class LoginForm(AuthenticationForm):
 
