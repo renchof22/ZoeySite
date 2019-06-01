@@ -8,5 +8,5 @@ from . import views as accounts_views
 app_name = 'Board'
 
 urlpatterns = [
-    path('', views.board_index, name='board_index'),
+    path('', views.home, name='home'),
 ]
