@@ -9,4 +9,5 @@ app_name = 'Board'
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('<int:pk>', views.contents, name='contents'),
 ]

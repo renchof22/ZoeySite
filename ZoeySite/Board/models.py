@@ -23,6 +23,11 @@ class Board(models.Model):
                                      format='JPEG',
                                      options={'quality': 60})
 
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.name
+
 
 # ボードへの書き込み
 class Post(models.Model):
@@ -34,3 +39,5 @@ class Post(models.Model):
     posted_at = models.DateTimeField(auto_now_add=True)
     # 書き込んだUSER
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.SET_NULL, null=True)
+
+    objects = models.Manager()
