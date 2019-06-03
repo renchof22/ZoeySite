@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'Accounts',
     'widget_tweaks',
     'imagekit',
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'ZoeySite.urls'
@@ -141,3 +143,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # メディアファイル公開時のＵURLプレフィックス。
 # http://アプリドメイン+MEDIA_URL+メディアファイル名
 MEDIA_URL = '/media/'
+
+# なんかデバック用のやつ
+INTERNAL_IPS = ['127.0.0.1', '192.168.33.1']

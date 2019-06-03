@@ -1,6 +1,6 @@
 from django.urls import reverse, resolve
 from django.test import TestCase
-from .views import home, contents
+from .views import home, topic_list
 from .models import Board
 
 
@@ -25,11 +25,11 @@ class HomeTests(TestCase):
 
     def test_home_view_contains_link_to_topics_page(self):
         """href="/boards/1/"が含まれてるか検証"""
-        board_topics_url = reverse('Board:contents', kwargs={'pk': self.board.pk})
+        board_topics_url = reverse('Board:topic_list', kwargs={'pk': self.board.pk})
         self.assertContains(self.response, 'href="{0}"'.format(board_topics_url))
 
     def test_board_topics_view_contains_link_back_to_homepage(self):
-        board_contents_url = reverse('Board:contents', kwargs={'pk': 1})
+        board_contents_url = reverse('Board:topic_list', kwargs={'pk': 1})
         response = self.client.get(board_contents_url)
         homepage_url = reverse('Board:home')
         self.assertContains(response, 'href="{0}"'.format(homepage_url))
@@ -43,17 +43,17 @@ class ContentsTests(TestCase):
 
     def test_board_topics_view_success_status_code(self):
         """pk=1で成功するか検証"""
-        url = reverse('Board:contents', kwargs={'pk': 1})
+        url = reverse('Board:topic_list', kwargs={'pk': 1})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 200)
 
     def test_board_topics_view_not_found_status_code(self):
         """pk=99では404エラー検証"""
-        url = reverse('Board:contents', kwargs={'pk': 99})
+        url = reverse('Board:topic_list', kwargs={'pk': 99})
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
 
     def test_board_topics_url_resolves_board_topics_view(self):
         """/boards/1ではcontentsが呼び出される検証"""
         view = resolve('/boards/1')
-        self.assertEquals(view.func, contents)
+        self.assertEquals(view.func, topic_list)

@@ -9,7 +9,12 @@ def home(request):
     return render(request, 'Board/home.html', {'boards': boards})
 
 
-def contents(request, pk):
+def topic_list(request, pk):
     """ページが存在しない場合は404エラー"""
     board = get_object_or_404(Board, pk=pk)
-    return render(request, 'Board/contents.html', {'board': board})
+    return render(request, 'Board/topic_list.html', {'board': board})
+
+
+def new_topic(request, pk):
+    board = get_object_or_404(Board, pk=pk)
+    return render(request, 'Board/new_topic.html', {'board': board})
