@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'Accounts',
     'widget_tweaks',
     'imagekit',
-    'Board'
+    'Board',
+    'Matching',
 ]
 
 MIDDLEWARE = [

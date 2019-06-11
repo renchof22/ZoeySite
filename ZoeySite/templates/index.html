@@ -1,10 +1,11 @@
-{% extends "base.html" %}
+{% extends "bootstrap_test.html" %}
 {% block content %}
 <div class="container-fluid" style="margin-top: 60px;">
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <p>インデックスです</p>
       <a href="{% url 'Board:home' %}">ボード</a>
+      <a href="{% url 'Matching:active_list' %}">マッチング</a>
     </div><!-- end col-md-6 offset-md-3 -->
   </div><!-- end row -->
 </div><!-- end container-fluid-->

@@ -1,0 +1,117 @@
+<!doctype html>
+{% load static %}
+<html lang="ja">
+<head>
+	<title>{% block title %}e-Social{% endblock %}</title>
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+	<link href="//fonts.googleapis.com/css?family=Playfair+Display:400,700%7COpen+Sans:300,400,600,700"
+	      rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/fontawesome-all.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link href="{% static 'css/bootstrap-reboot.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+	{% block stylesheet %}{% endblock %}
+</head>
+
+<body>
+
+{% block body %}
+
+<h1>Hello World!!</h1>
+<button class="btn btn-primary" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-secondary" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-info" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-success" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-warning" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-danger" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+<button class="btn btn-dark" type="button">
+	<i class="fab fa-facebook-messenger"></i>
+</button>
+
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container">
+          <a class="navbar-brand" href="{% url 'index' %}">e-Social</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="mainMenu">
+              {% if user.is_authenticated %}
+              <ul class="navbar-nav ml-auto">
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                          <a class="dropdown-item" href="{% url 'Accounts:my_account' %}">My account</a>
+                          <a class="dropdown-item" href="{% url 'Accounts:password_change' %}">Change password</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="{% url 'Accounts:logout' %}">Log out</a>
+                      </div>
+                  </li>
+              </ul>
+
+              {% else %}
+              <form class="form-inline ml-auto">
+                  <a href="{% url 'Accounts:login' %}" class="btn btn-outline-secondary">Log in</a>
+                  <a href="{% url 'Accounts:signup' %}" class="btn btn-primary ml-2">Sign up</a>
+              </form>
+              {% endif %}
+          </div>
+      </div>
+  </nav>
+<!-- 切り替えボタンの設定 -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#Modal">
+  押すと表示されます。
+</button>
+
+<!-- モーダルの設定 -->
+
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="Modal" aria-hidden="true">
+  <!--以下modal-dialogのCSSの部分で modal-lgやmodal-smを追加するとモーダルのサイズを変更することができる-->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="Modal">モーダルのタイトルが表示されます</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        モーダルのコンテンツを表示します。このモーダルはサイズを大きくしています。
+        またレシポンシブデザインに対応しているので画面を小さくすると、モーダルも自動で縮小されます
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+        <button type="button" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% block content %}{% endblock %}
+
+<!-- JAVASCRIPTS (Load javascripts at bottom, this will reduce page load time) -->
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+{% endblock body %}
+</body>
+</html>

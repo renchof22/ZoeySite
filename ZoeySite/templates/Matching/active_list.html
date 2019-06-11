@@ -1,0 +1,35 @@
+{% extends 'bootstrap_test.html' %}
+
+{% block title %}
+  {{ board.name }} - {{ block.super }}
+{% endblock %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item"><a href="{% url 'Board:home' %}">Boards</a></li>
+  <li class="breadcrumb-item active">{{ board.name }}</li>
+{% endblock %}
+
+{% block content %}
+<h1>マッチングしましょう</h1>
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th>User</th>
+        <th>Active</th>
+        <th>VC</th>
+        <th>PlayStyle</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for match in matching.all %}
+        <tr>
+          <td>{{ match.user.username }}</td>
+          <td>{{ match.active }}</td>
+          <td>{{ match.voice_chat }}</td>
+          <td>{{ match.play_style }}</td>
+          <td><button class="btn btn-dark" type="button"> <i class="fas fa-handshake"> </i></button></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

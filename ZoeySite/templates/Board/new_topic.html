@@ -10,6 +10,7 @@
 
 {% block content %}
   <form method="post" novalidate>
+      <!-- postメソッドにおいてcsrfトークンは必須
     {% csrf_token %}
       <!-- form.as_pでhtml表記に変換する -->
     {{ form.as_p }}

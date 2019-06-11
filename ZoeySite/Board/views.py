@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from .forms import NewTopicForm
 
+
 def home(request):
     boards = Board.objects.all()
     return render(request, 'Board/home.html', {'boards': boards})
