@@ -27,7 +27,33 @@
           <td>{{ match.active }}</td>
           <td>{{ match.voice_chat }}</td>
           <td>{{ match.play_style }}</td>
-          <td><button class="btn btn-dark" type="button"> <i class="fas fa-handshake"> </i></button></td>
+          <td>
+            <!-- 切り替えボタンの設定 -->
+            <button class="btn btn-dark" type="button" data-toggle="modal" data-target="#modal1">
+              <i class="fas fa-handshake"></i>
+            </button>
+            <!-- モーダルの設定 -->
+            <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="label1">申請しますか？</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    {{ match.user.username }}
+                    {{ match.user.email }}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                    <button type="button" class="btn btn-primary">申請</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
         </tr>
       {% endfor %}
     </tbody>
