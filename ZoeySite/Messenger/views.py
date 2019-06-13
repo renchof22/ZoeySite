@@ -1,3 +1,8 @@
 from django.shortcuts import render
+from .forms import MessageForm
 
-# Create your views here.
+
+
+# def post_new(request):
+#     form = MessageForm()
+#     return render(request, 'blog/post_edit.html', {'form': form})
