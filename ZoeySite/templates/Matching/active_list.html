@@ -21,7 +21,7 @@
 	</tr>
 	</thead>
 	<tbody>
-	{% for match in matching.all %}
+	{% for match in active_list %}
 	<tr>
 		<td>{{ match.user.username }}</td>
 		<td>{{ match.active }}</td>
@@ -33,7 +33,7 @@
 				<i class="fas fa-handshake"></i>
 			</button>
 			<!-- モーダルの設定 -->
-			<form method="POST" novalidate >
+			<form method="POST" action="{% url 'Matching:active_list' %}" >
 				{% csrf_token %}
 				<div class="modal fade" id="{{ match.user.username }}" tabindex="-1" role="dialog" aria-labelledby="label1" aria-hidden="true">
 					<div class="modal-dialog modal-dialog-centered" role="document">
@@ -48,9 +48,9 @@
 								<p>ユーザ情報を展開する</p>
 								{{ match.user.username }}
 								{{ match.user.email }}
-								{{ form.id_for_bodyText }}
-								{{ form.field.value()|default("") }}
+								{% include 'includes/form.html' %}
 							</div>
+							<input type="hidden" name="matching_id" value="{{ match.pk }}">
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 								<!-- formタグ内にsubmitを入れることで送信できる -->

@@ -22,6 +22,16 @@ class Matching(models.Model):
         return "<{0}> , <{1}>".format(self.user, self.active)
 
 
+class Comment(models.Model):
+    """Matchingインスタンスに対する返信"""
+    matching = models.ForeignKey(Matching, on_delete=models.CASCADE)
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sender')
+    bodyText = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "<{0}> , <{1}> , <{2}>".format(self.matching, self.sender, self.bodyText)
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

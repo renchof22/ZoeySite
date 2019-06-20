@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'imagekit',
     'Board',
     'Matching',
-    'Messenger',
 ]
 
 MIDDLEWARE = [
