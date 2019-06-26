@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 
 
 class UserManager(BaseUserManager):
@@ -40,9 +42,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     psn_id = models.CharField(max_length=30)
-    image =  models.ImageField(upload_to='myapp')
-
-
+    image = models.ImageField(upload_to='account_image', blank=True)
+    image_thumbnail = ImageSpecField(source='image',
+                                     processors=[ResizeToFill(50, 50)],
+                                     format='JPEG',
+                                     options={'quality': 60})
+    status_enable = models.BooleanField(default=False)
 
     objects = UserManager()
 

@@ -8,14 +8,17 @@ from . import views as accounts_views
 app_name = 'Accounts'
 
 urlpatterns = [
-    path('signup/', views.signup,
-         name='signup'),
-    path('login/', auth_views.LoginView.as_view(
-        template_name="Accounts/login.html"),
-        name='login'),
-    path('logout/', auth_views.LogoutView.as_view(
-        template_name="index.html"),
-        name='logout'),
+    # サインアップページ
+    path('signup/', views.signup, name='signup'),
+    # ログインページ
+    path('login/', auth_views.LoginView.as_view(template_name="Accounts/login.html"), name='login'),
+    # ログアウトページ
+    path('logout/', auth_views.LogoutView.as_view(template_name="index.html"), name='logout'),
+    # マイページ兼ユーザ情報閲覧ページ
+    path('<int:pk>/', views.UserDetailView.as_view(), name="user_detail"),
+    # ユーザ情報更新ページ
+    path('<int:pk>/edit/', views.UserUpdateView.as_view(), name="user_update"),
+
     path('reset/', auth_views.PasswordResetView.as_view(
         template_name='Accounts/password_reset.html',
         email_template_name='Accounts/password_reset_email.html',
@@ -32,7 +35,6 @@ urlpatterns = [
     path('reset/complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name='Accounts/password_reset_complete.html'),
         name='password_reset_complete'),
-
     path('settings/password/', auth_views.PasswordChangeView.as_view(
         template_name='Accounts/password_change.html',
         success_url=reverse_lazy('Accounts:password_change_done')),
@@ -40,7 +42,4 @@ urlpatterns = [
     path('settings/password/done/', auth_views.PasswordChangeDoneView.as_view(
         template_name='Accounts/password_change_done.html'),
         name='password_change_done'),
-
-    path('settings/', accounts_views.UserUpdateView.as_view(),
-         name='my_account'),
 ]

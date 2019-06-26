@@ -7,16 +7,16 @@ from .forms import (
     LoginForm,
     SignUpForm,
 )
-from django.contrib.auth.models import User
 from django.urls import reverse_lazy
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 
 from django.utils.decorators import method_decorator
-from django.views.generic import UpdateView
+from django.views import generic
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 User = get_user_model()
 
 
@@ -70,13 +70,28 @@ def regist_save(request):
     return render(request, 'signup.html', context)
 
 
-# アカウント情報編集ページ
-@method_decorator(login_required, name='dispatch')
-class UserUpdateView(UpdateView):
-    model = User
-    fields = ('username', 'email')
-    template_name = 'Accounts/my_account.html'
-    success_url = reverse_lazy('Accounts:my_account')
+class OnlyYouMixin(UserPassesTestMixin):
+    """ユーザ情報更新ページは自分しかアクセス出来ないようにするMixin"""
+    raise_exception = True
 
-    def get_object(self):
-        return self.request.user
+    # ログインユーザーのpkと、そのユーザー情報ページのpkが同じか、又はスーパーユーザーなら許可
+    def test_func(self):
+        user = self.request.user
+        return user.pk == self.kwargs['pk'] or user.is_superuser
+
+
+class UserDetailView(generic.DetailView):
+    """ユーザー情報閲覧ページ"""
+    model = User
+    template_name = 'Accounts/user_detail.html'
+
+
+class UserUpdateView(OnlyYouMixin, generic.UpdateView):
+    """ユーザー情報更新ページ。自分しかアクセス出来ない。"""
+    model = User
+    template_name = 'Accounts/user_update.html'
+    success_url = reverse_lazy('Accounts:user_detail')
+    fields = ("username", "email", "image")
+
+    # TODO:formをhtmlに表示させる
+
