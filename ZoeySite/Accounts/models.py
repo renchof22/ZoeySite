@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 
+DEFAULT_IMAGE = "../../media/default/no_image.png"
+
 
 class UserManager(BaseUserManager):
 
@@ -42,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     psn_id = models.CharField(max_length=30)
-    image = models.ImageField(upload_to='account_image', blank=True)
+    image = models.ImageField(upload_to='account_image', blank=True, null=True)
     image_thumbnail = ImageSpecField(source='image',
                                      processors=[ResizeToFill(50, 50)],
                                      format='JPEG',
@@ -57,4 +59,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return '<id:' + str(self.username) + ',' + str(self.email) + '>'
+
+    def get_image(self):
+        if not self.image:
+            # depending on your template
+            return DEFAULT_IMAGE
+        else:
+            return self.image.url
 

@@ -91,7 +91,7 @@ class UserUpdateView(OnlyYouMixin, generic.UpdateView):
     model = User
     template_name = 'Accounts/user_update.html'
     success_url = reverse_lazy('Accounts:user_detail')
-    fields = ("username", "email", "image")
+    fields = ("username", "email", "image", "psn_id")
 
     # TODO:formをhtmlに表示させる
 

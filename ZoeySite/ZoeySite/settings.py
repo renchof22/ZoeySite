@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'imagekit',
     'Board',
     'Matching',
+    'Tournament',
 ]
 
 MIDDLEWARE = [
@@ -141,7 +142,7 @@ LOGIN_URL = 'Accounts:login'
 # サーバから見たメディアルートの絶対パス
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# メディアファイル公開時のＵURLプレフィックス。
+# メディアファイル公開時のURLプレフィックス。
 # http://アプリドメイン+MEDIA_URL+メディアファイル名
 MEDIA_URL = '/media/'
 

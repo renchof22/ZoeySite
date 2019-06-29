@@ -24,9 +24,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('accounts/', include('Accounts.urls')),
-    path('boards/', include('Board.urls')),
+    path('account/', include('Accounts.urls')),
+    path('board/', include('Board.urls')),
     path('match/', include('Matching.urls')),
+    path('tournament', include('Tournament.urls')),
 ]
 
 if settings.DEBUG:
