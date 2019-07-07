@@ -14,7 +14,7 @@ from django.urls import reverse_lazy
 #     # Submitボタンを押したら
 #     if request.method == 'POST':
 #         # instance = {"sender": request.user, "receiver": request.POST.get("receiver")}
-#         # instance = request.user
+#         # instance = request .user
 #         form = CommentForm(request.POST)
 #
 #         # 入力内容に問題がなければ

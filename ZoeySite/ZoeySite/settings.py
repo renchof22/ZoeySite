@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'Board',
     'Matching',
     'Tournament',
+    'bootstrap_datepicker_plus',
+    'bootstrap4'
 ]
 
 MIDDLEWARE = [
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.file'
 
 ROOT_URLCONF = 'ZoeySite.urls'
 

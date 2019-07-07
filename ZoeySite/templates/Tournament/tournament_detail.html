@@ -1,0 +1,25 @@
+{% extends 'bootstrap_test.html' %}
+
+{% block content %}
+
+<body>
+<h1>参加ユーザー一覧</h1>
+<ul>
+    {% for member in tournament.participant.all %}
+	<li><a href="{% url 'Accounts:user_detail' member.pk %}">{{ member.username }}</a></li>
+	{% endfor %}
+</ul>
+
+<form method="POST">
+	{% csrf_token %}
+	{% if user in tournament.participant.all %}
+		<input type="hidden" name="user_action" value="cancel">
+		<button type="submit" class="btn btn-primary">参加キャンセル</button>
+	{% else %}
+		<input type="hidden" name="user_action" value="part">
+		<button type="submit" class="btn btn-primary">参加</button>
+	{% endif %}
+
+</form>
+
+{% endblock %}

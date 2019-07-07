@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+</head>
+<body>
+	 <form method="POST">
+        {% csrf_token %}
+        {% for field in search_form %}
+            <div class="form-group form-inline">
+                <label class="col-md-offset-2 col-md-3 control-label">{{ field.label }}:</label>
+                <div class="col-md-8">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+        <input class="btn btn-success offset-md-8 col-md-3" type="submit" id="button" name="button" value="検索">
+    </form>
+
+<h1>検索結果</h1>
+    <section class="post-list">
+        {% if object_list|length == 0 %}
+            <p>検索結果が存在しません。</p>
+        {% else %}
+            <table class="table table-hover table-bordered">
+                <tr>
+                    <th>タイトル</th>
+                    <th>内容</th>
+                </tr>
+                <tbody>
+                {% for tournament in object_list %}
+                    <tr>
+	                    <td width="35%"><a href="{% url 'Tournament:tournament_detail' tournament.pk %}">{{ tournament.name }}</a></td>
+                        <td width="65%">{{ tournament.description }}</td>
+                        {% for member in tournament.participant.all %}
+                            <td width="65%">{{ member }}</td>
+	                    {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </section>
+    <div class="col-6 offset-3 justify-content-center">
+        {% if is_paginated %}
+            {% include 'pagination.html' %}
+        {% endif %}
+    </div>
+</body>
+</html>
