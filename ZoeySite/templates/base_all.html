@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ja">
+<head>
+	<title>{% block title %}Ezo{% endblock %}</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'css/my_style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/jpn.min.css' %}">
+
+	{% block stylesheet %}{% endblock %}
+</head>
+
+<body>
+{% block body %}
+
+<!--ヘッダー-->
+<header id="header">
+	<div class="container">
+		<!--画面サイズmd(992-1119px)以上では横に羅列し、md未満ではトグル隠蔽化-->
+		<nav class="navbar fixed-top navbar-expand-md no-gutters">
+			<!--左：ブランド名-->
+			<a class="navbar-brand" href="{% url 'index' %}">
+				<img src="https://placehold.jp/600x150.png" height="30" alt="image">
+			</a>
+			<!--トグル-->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse-4"
+			        aria-controls="navbarNav15" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<!--中央：メニュー一覧-->
+			<div class="collapse navbar-collapse navbar-collapse-4 col-md-8" id="navbarNav15">
+				<ul class="navbar-nav justify-content-center">
+					<li class="nav-item active">
+						<a class="nav-link fr-view" href="{% url 'Board:home' %}"
+						   style="outline: none; display: inline-block;">
+							<i class="fas fa-pencil-alt fa-fw"></i>スレッド
+						</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link fr-view" href="#"
+						   style="outline: none; display: inline-block;">
+							<i class="fas fa-users fa-fw"></i>クラン
+						</a>
+					</li>
+
+					<li class="nav-item">
+						<a class="nav-link fr-view" href="{% url 'Matching:active_list' %}"
+						   style="outline: none; display: inline-block;">
+							<i class="fas fa-handshake fa-fw"></i>パーティ
+						</a>
+					</li>
+					<li class="nav-item">
+
+						<a class="nav-link fr-view" href="{% url 'Tournament:tournament_list' %}"
+						   style="outline: none; display: inline-block;">
+							<i class="fas fa-crown fa-fw"></i>トーナメント
+						</a>
+					</li>
+				</ul>
+			</div>
+			<!--右：User認証されている場合アカウント名、されていない場合ログイン-->
+			<div class="collapse navbar-collapse navbar-collapse-4">
+				<!--ユーザ認証済-->
+				{% if user.is_authenticated %}
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="userMenu" data-toggle="dropdown"
+						   aria-haspopup="true" aria-expanded="false">
+							<img class="image_thumbnail" src="{{ user.get_image_thumbnail }}" height="30" alt="image">
+							{{ user.username }}
+						</a>
+						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+							<a class="dropdown-item" href="{% url 'Accounts:user_detail' user.pk %}">My account</a>
+							<a class="dropdown-item" href="{% url 'Accounts:password_change' %}">Change password</a>
+							<!--<div class="dropdown-divider"></div>-->
+							<a class="dropdown-item" href="{% url 'Accounts:logout' %}">Log out</a>
+						</div>
+					</li>
+				</ul>
+				<!--ユーザ未認証-->
+				{% else %}
+				<form class="form-inline ml-auto">
+					<a href="{% url 'Accounts:login' %}" class="btn btn-outline-secondary">Log in</a>
+				</form>
+				{% endif %}
+			</div>
+		</nav>
+	</div>
+</header>
+{% block content %}{% endblock %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.pkgd.min.js"></script>
+<script src="https://use.fontawesome.com/releases/v5.5.0/js/all.js"></script>
+{% endblock body %}
+</body>
+</html>

@@ -67,3 +67,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             return self.image.url
 
+    def get_image_thumbnail(self):
+        if not self.image_thumbnail:
+            # depending on your template
+            return DEFAULT_IMAGE
+        else:
+            return self.image_thumbnail.url

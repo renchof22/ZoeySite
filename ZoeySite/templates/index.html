@@ -1,9 +1,10 @@
-{% extends "bootstrap_test.html" %}
+{% extends "base_all.html" %}
 {% block content %}
 <div class="container-fluid" style="margin-top: 60px;">
   <div class="row">
     <div class="col-md-6 offset-md-3">
       <p>インデックスです</p>
+      テスト
       <a href="{% url 'Board:home' %}">ボード</a>
       <a href="{% url 'Matching:active_list' %}">マッチング</a>
       <a href="{% url 'Tournament:tournament_list' %}">大会</a>
@@ -11,4 +12,75 @@
     </div><!-- end col-md-6 offset-md-3 -->
   </div><!-- end row -->
 </div><!-- end container-fluid-->
+
+
+<!--サービス説明セクション-->
+<section class="fdb-block fp-active" data-block-type="contents" data-id="1">
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-12 col-md-6 mb-4 mb-md-0" style="z-index: 100;"><p><img alt="image"
+			                                                                          class="img-fluid fr-fic fr-dii"
+			                                                                          src="https://cdn.jsdelivr.net/gh/froala/design-blocks@2.0.1/dist/imgs//draws/smile.svg">
+			</p></div>
+			<div class="col-12 col-md-6 col-lg-5 ml-md-auto text-left" style="z-index: 100;"><h1>Froala Blocks</h1>
+				<p class="lead">たいていの人はほんとうになにがほしいのか、 心の中でわかっています。
+					人生の目標を教えてくれるのは直感だけ。 ただ、それに耳を傾けない人が多すぎるのです。
+				</p>
+				<p><a class="btn-secondary mt-4 btn btn-primary" href="https://www.froala.com">Download</a></p></div>
+		</div>
+	</div>
+</section>
+
+<section class="fdb-block"
+         style="background-image: url(https://cdn.jsdelivr.net/gh/froala/design-blocks@2.0.1/dist/imgs//hero/red.svg);"
+         data-block-type="forms" data-id="2">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center" style="z-index: 100;">
+				<div class="fdb-box">
+					<div class="row">
+						<div class="col fr-box" role="application" style="z-index: 100;">
+							<div class="fr-wrapper" dir="auto">
+								<div aria-disabled="false" class="fr-element fr-view" contenteditable="true" dir="auto"
+								     spellcheck="true"><h1>Log In</h1></div>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-4">
+						<div class="col fr-box" role="application" style="z-index: 100;">
+							<div class="fr-wrapper" dir="auto">
+								<div aria-disabled="false" class="fr-element fr-view" contenteditable="true" dir="auto"
+								     spellcheck="true"><p><input type="text" class="form-control" placeholder="Email"
+								                                 value=""></p></div>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-4">
+						<div class="col fr-box fr-inline" role="application" style="z-index: 100;">
+							<div class="fr-wrapper" dir="auto">
+								<div aria-disabled="false" class="fr-element fr-view" contenteditable="true" dir="auto"
+								     spellcheck="true"><p><input type="password" class="form-control mb-1"
+								                                 placeholder="Password" value=""></p>
+									<p class="text-right"><a href="https://www.froala.com">Recover Password</a></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mt-4">
+						<div class="col fr-box" role="application" style="z-index: 100;">
+							<div class="fr-wrapper" dir="auto">
+								<div aria-disabled="false" class="fr-element fr-view" contenteditable="true" dir="auto"
+								     spellcheck="true">
+									<p>
+										<button class="btn btn-outline-secondary" type="button">Submit</button>
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 {% endblock %}
