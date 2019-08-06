@@ -1,6 +1,6 @@
-{% extends 'Accounts/base_accounts.html' %}
+{% extends 'base_all.html' %}
 
-{% block title %}Log in to e-Social{% endblock %}
+{% block title %}ログイン{% endblock %}
 
 {% block content %}
   <div class="row justify-content-center">
@@ -15,7 +15,7 @@
           </form>
         </div>
         <div class="card-footer text-muted text-center">
-          New to e-Social? <a href="{% url 'Accounts:signup' %}">Sign up</a>
+          Ezoに登録していない <a href="{% url 'Accounts:signup' %}">サインアップ</a>
         </div>
       </div>
       <div class="text-center py-2">

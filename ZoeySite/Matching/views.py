@@ -8,25 +8,6 @@ from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormMixin
 from django.urls import reverse_lazy
 
 
-# def active_list(request):
-#     """現在アクティブなUSERを取得して表示"""
-#     matching = Matching.objects.all()   # TODO:active=ONののみを表示させる
-#     # Submitボタンを押したら
-#     if request.method == 'POST':
-#         # instance = {"sender": request.user, "receiver": request.POST.get("receiver")}
-#         # instance = request .user
-#         form = CommentForm(request.POST)
-#
-#         # 入力内容に問題がなければ
-#         if form.is_valid():
-#             message = form.save()  # ユーザ情報保存
-#             return redirect('index')  # リダイレクト
-#     else:
-#         form = CommentForm()
-#
-#     return render(request, 'Matching/active_list.html', {'matching': matching, 'form': form})
-
-
 class ActiveListView(ProcessFormView, generic.ListView):
     """データの一覧を表示するhtmlに最適なジェネリックビュー"""
     model = Matching        # モデル指定
@@ -41,7 +22,6 @@ class ActiveListView(ProcessFormView, generic.ListView):
         """htmlコンテキストへdictを渡す"""
         context = super(ActiveListView, self).get_context_data(*args, **kwargs)
         context['form'] = CommentForm()
-        # context['comment_list'] = get_object_or_404(Comment,)
         return context
 
     def post(self, request, *args, **kwargs):

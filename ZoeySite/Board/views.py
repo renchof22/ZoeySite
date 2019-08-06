@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from .forms import NewTopicForm
+from django.views import generic
+from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormMixin
 
 
 def home(request):
@@ -13,9 +15,47 @@ def home(request):
     return render(request, 'Board/home.html', {'boards': boards})
 
 
-def topic_list(request, pk):
+class TopicListView(ProcessFormView, generic.ListView):
+    """データの一覧を表示するhtmlに最適なジェネリックビュー"""
+    model = Topic           # モデル指定
+    paginate_by = 10         # 一ページに出力する件数指定
+    context_object_name = "topic_list"     # html内でactive_listという名前で使えるようにする
+    template_name = "Board/topic_list.html"
+    ordering = ['last_updated']
+
+    # def get_context_data(self, *args, **kwargs):
+    #     """htmlコンテキストへdictを渡す"""
+    #     context = super(ActiveListView, self).get_context_data(*args, **kwargs)
+    #     context['form'] = CommentForm()
+    #     return context
+    #
+    # def post(self, request, *args, **kwargs):
+    #     """POSTメソッドの際に呼び出される関数"""
+    #     self.object = None
+    #     self.object_list = self.get_queryset()
+    #     form = CommentForm(request.POST)
+    #     # commit = FalseでFormに適したモデルインスタンスを作成する。この場合はMatchingモデルインスタンス
+    #     comment = form.save(commit=False)
+    #     # senderとmatchingはhtmlで指定しない。formで指定するとエラー
+    #     comment.sender = request.user
+    #     comment.matching = get_object_or_404(Matching, pk=request.POST["matching_id"])
+    #
+    #     if form.is_valid():
+    #         comment.save()
+    #         return redirect('Matching:active_list')
+    #     else:
+    #         return redirect('Matching:active_list')
+    #
+    def get(self, request, *args, **kwargs):
+        """GETメソッドで呼ばれる関数"""
+        self.object = None
+        self.object_list = self.get_queryset()
+        return super().get(request, *args, **kwargs)
+
+
+def topic_list(request):
     """ページが存在しない場合は404エラー"""
-    board = get_object_or_404(Board, pk=pk)
+    topic = get_object_or_404(Topic, pk=pk)
     return render(request, 'Board/topic_list.html', {'board': board})
 
 

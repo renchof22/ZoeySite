@@ -1,26 +1,33 @@
-{% load form_tags widget_tweaks %}
+{% load widget_tweaks %}
 
-{% if form.non_field_errors %}
-  <div class="alert alert-danger" role="alert">
-    {% for error in form.non_field_errors %}
-      <p>{% if forloop.last %} class="mb-0"{% endif %}>{{ error }}</p>
-    {% endfor %}
-  </div>
-{% endif %}
-
+<!-- 入力フィールド毎のループ -->
 {% for field in form %}
-  <div class="form-group">
-    {{ field.label_tag }}
-    {% render_field field class=field|input_class %}
-    {% for error in field.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-    {% endfor %}
-    {% if field.help_text %}
-      <small class="form-text text-muted">
-        {{ field.help_text|safe }}
-      </small>
-    {% endif %}
-  </div>
+<div class="form-group">
+	<!-- 初期状態：is_bound=False -->
+	{% if form.is_bound %}
+
+		<!-- バリデーション失敗状態：エラーメッセージを表示 (is-invalidクラス追加) -->
+		{% if field.errors %}
+			{% render_field field class="form-control form-control-sm is-invalid " %}
+			<!-- エラーメッセージを赤色表示 -->
+			{% for error in field.errors %}
+				<div class="invalid-feedback" style="font-size:60%;">
+					{{ error }}
+				</div>
+			{% endfor %}
+
+		<!-- バリデーション成功状態：適切なフィールドは緑表示 (is_validクラス追加) -->
+		{% else %}
+			{% render_field field class="form-control form-control-sm is-valid " %}
+		{% endif %}
+	{% else %}
+		{% render_field field class="form-control form-control-sm" %}
+	{% endif %}
+
+	<!--{% if field.help_text %}-->
+		<!--<small class="form-text text-muted">-->
+			<!--{{ field.help_text }}-->
+		<!--</small>-->
+	<!--{% endif %}-->
+</div>
 {% endfor %}

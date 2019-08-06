@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-	<link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
 	<link rel="stylesheet" href="{% static 'css/my_style.css' %}">
 	<link rel="stylesheet" href="{% static 'css/jpn.min.css' %}">
 
@@ -14,8 +14,6 @@
 </head>
 
 <body>
-{% block body %}
-
 <!--ヘッダー-->
 <header id="header">
 	<div class="container">
@@ -34,7 +32,7 @@
 			<div class="collapse navbar-collapse navbar-collapse-4 col-md-8" id="navbarNav15">
 				<ul class="navbar-nav justify-content-center">
 					<li class="nav-item active">
-						<a class="nav-link fr-view" href="{% url 'Board:home' %}"
+						<a class="nav-link fr-view" href="{% url 'Board:topic_list' %}"
 						   style="outline: none; display: inline-block;">
 							<i class="fas fa-pencil-alt fa-fw"></i>スレッド
 						</a>
@@ -74,29 +72,33 @@
 							{{ user.username }}
 						</a>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-							<a class="dropdown-item" href="{% url 'Accounts:user_detail' user.pk %}">My account</a>
-							<a class="dropdown-item" href="{% url 'Accounts:password_change' %}">Change password</a>
-							<!--<div class="dropdown-divider"></div>-->
-							<a class="dropdown-item" href="{% url 'Accounts:logout' %}">Log out</a>
+							<a class="dropdown-item" href="{% url 'Accounts:user_detail' user.pk %}">マイアカウント</a>
+							<a class="dropdown-item" href="{% url 'Accounts:password_change' %}">パスワード変更</a>
+							<a class="dropdown-item" href="{% url 'Accounts:logout' %}">ログアウト</a>
 						</div>
 					</li>
 				</ul>
 				<!--ユーザ未認証-->
 				{% else %}
 				<form class="form-inline ml-auto">
-					<a href="{% url 'Accounts:login' %}" class="btn btn-outline-secondary">Log in</a>
+					<a href="{% url 'Accounts:login' %}" class="btn btn-outline-secondary login-btn">
+						<i class="fas fa-sign-in-alt fa-fw"></i>ログイン</a>
 				</form>
 				{% endif %}
 			</div>
 		</nav>
 	</div>
 </header>
+{% block body %}
+
 {% block content %}{% endblock %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/froala-editor@2.9.1/js/froala_editor.pkgd.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 <script src="https://use.fontawesome.com/releases/v5.5.0/js/all.js"></script>
+
 {% endblock body %}
 </body>
 </html>
