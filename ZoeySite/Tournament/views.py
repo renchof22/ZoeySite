@@ -66,7 +66,7 @@ class TournamentDetailView(LoginRequiredMixin, generic.DetailView):
         # 参加済みならcancelアクションがHTMLから送られてくる
         if request.POST["user_action"] == "cancel":
             obj.participant.remove(request.user)
-        else :
+        else:
             obj.participant.add(request.user)
         return redirect('Tournament:tournament_list')
 

@@ -82,7 +82,7 @@ class Topic(models.Model):
 class Post(models.Model):
     # 書き込み内容
     message = models.TextField(max_length=4000)
-    # 書き込まれた所属ボード
+    # 書き込まれた所属トピック
     topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)
     # 書き込み日時
     posted_at = models.DateTimeField(auto_now_add=True)

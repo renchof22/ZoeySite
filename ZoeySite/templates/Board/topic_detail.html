@@ -1,0 +1,17 @@
+{% extends 'base_all.html' %}
+
+{% block content %}
+<h1>{{ topic_instance.subject }}</h1>
+
+<ul>
+  <li>{{ topic_instance.last_updated }}</li>
+  <li>{{ topic_instance.starter }}</li>
+</ul>
+
+
+{% for post in post_list %}
+<h2>{{ post.message }}</h2>
+<h2>{{ post.posted_at }}</h2>
+<h2>{{ post.posted_by }}</h2>
+{% endfor %}
+{% endblock %}

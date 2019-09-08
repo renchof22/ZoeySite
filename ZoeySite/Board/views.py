@@ -16,10 +16,10 @@ def home(request):
 
 
 class TopicListView(ProcessFormView, generic.ListView):
-    """データの一覧を表示するhtmlに最適なジェネリックビュー"""
+    """トピック一覧を表示するビュー"""
     model = Topic           # モデル指定
     paginate_by = 10         # 一ページに出力する件数指定
-    context_object_name = "topic_list"     # html内でactive_listという名前で使えるようにする
+    context_object_name = "topic_list"     # html内でtopic_listという名前で使えるようにする
     template_name = "Board/topic_list.html"
     ordering = ['last_updated']
 
@@ -51,6 +51,21 @@ class TopicListView(ProcessFormView, generic.ListView):
         self.object = None
         self.object_list = self.get_queryset()
         return super().get(request, *args, **kwargs)
+
+
+class TopicDetailView(generic.DetailView):
+    """トピックの詳細を表示するビュー"""
+    template_name = "Board/topic_detail.html"
+    model = Topic
+    context_object_name = "topic_instance"
+
+    def get_context_data(self, **kwargs):
+        """HTMLファイルに変数を渡す関数。Get毎に呼ばれるっぽい"""
+        context = super().get_context_data(**kwargs)
+        # TODO:ここがエラー
+        post_list = Post.objects.filter(topic=self.object)
+        context['post_list'] = post_list
+        return context
 
 
 def topic_list(request):
