@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'Matching',
     'Tournament',
     'bootstrap_datepicker_plus',
-    'bootstrap4'
+    'bootstrap4',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [

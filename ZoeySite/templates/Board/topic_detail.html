@@ -6,8 +6,12 @@
 <ul>
   <li>{{ topic_instance.last_updated }}</li>
   <li>{{ topic_instance.starter }}</li>
+  <li>{{ topic_instance.views }}</li>
 </ul>
 
+<div class="mb-4">
+  <a href="{% url 'Board:post_create' topic_instance.id %}" class="btn btn-primary">書き込む</a>
+</div>
 
 {% for post in post_list %}
 <h2>{{ post.message }}</h2>

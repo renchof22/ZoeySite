@@ -1,5 +1,5 @@
 {% extends 'base_all.html' %}
-
+{% load humanize %}
 {% block title %}
   {{ board.name }} - {{ block.super }}
 {% endblock %}
@@ -11,7 +11,7 @@
 
 {% block content %}
   <div class="mb-4">
-    <a href="#" class="btn btn-primary">New topic</a>
+    <a href="{% url 'Board:topic_create' %}" class="btn btn-primary">New topic</a>
   </div>
   <table class="table">
     <thead class="thead-dark">
@@ -29,8 +29,8 @@
           <td><a href="{% url 'Board:topic_detail' topic.id %}"> {{ topic.subject }}</a></td>
           <td>{{ topic.starter.username }}</td>
           <td>0</td>
-          <td>0</td>
-          <td>{{ topic.last_updated }}</td>
+          <td>{{ topic.views }}</td>
+          <td>{{ topic.last_updated|naturaltime }}</td>
         </tr>
       {% endfor %}
     </tbody>

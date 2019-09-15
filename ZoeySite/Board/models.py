@@ -10,7 +10,7 @@ DEFAULT_IMAGE = "../../media/default/no_image.png"
 # 掲示板モデル
 class Board(models.Model):
     # 掲示板名
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=30)
     # 掲示板概要
     description = models.CharField(max_length=300)
     # 最終書き込み日時
@@ -28,7 +28,7 @@ class Board(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return self.name
+        return "{0} , {1}".format(self.id, self.name)
 
     def get_image(self):
         if not self.image:
@@ -51,6 +51,7 @@ class Topic(models.Model):
     last_updated = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.SET_NULL, null=True)
     starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='topics', on_delete=models.SET_NULL, null=True)
+    views = models.PositiveIntegerField(default=0)
     # ボード画像
     image = models.ImageField(upload_to='avatars')
     # ボード画像サムネイル
@@ -58,6 +59,7 @@ class Topic(models.Model):
                                      processors=[ResizeToFill(50, 50)],
                                      format='JPEG',
                                      options={'quality': 60})
+
     objects = models.Manager()
 
     def __str__(self):
@@ -80,16 +82,12 @@ class Topic(models.Model):
 
 # トピックへの書き込み
 class Post(models.Model):
-    # 書き込み内容
     message = models.TextField(max_length=4000)
-    # 書き込まれた所属トピック
     topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)
-    # 書き込み日時
     posted_at = models.DateTimeField(auto_now_add=True)
-    # 書き込んだUSER
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.SET_NULL, null=True)
 
     objects = models.Manager()
 
     def __str__(self):
-        return "{0},{1},{2}".format(self.topic.subject, self.posted_by, self.message)
+        return "{0},{1},{2}".format(self.topic, self.posted_by, self.message)

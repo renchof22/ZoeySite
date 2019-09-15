@@ -5,9 +5,10 @@ from .models import Board, Topic, Post
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .forms import NewTopicForm
+from .forms import TopicForm, PostForm
 from django.views import generic
 from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormMixin
+from django.urls import reverse
 
 
 def home(request):
@@ -23,29 +24,6 @@ class TopicListView(ProcessFormView, generic.ListView):
     template_name = "Board/topic_list.html"
     ordering = ['last_updated']
 
-    # def get_context_data(self, *args, **kwargs):
-    #     """htmlコンテキストへdictを渡す"""
-    #     context = super(ActiveListView, self).get_context_data(*args, **kwargs)
-    #     context['form'] = CommentForm()
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     """POSTメソッドの際に呼び出される関数"""
-    #     self.object = None
-    #     self.object_list = self.get_queryset()
-    #     form = CommentForm(request.POST)
-    #     # commit = FalseでFormに適したモデルインスタンスを作成する。この場合はMatchingモデルインスタンス
-    #     comment = form.save(commit=False)
-    #     # senderとmatchingはhtmlで指定しない。formで指定するとエラー
-    #     comment.sender = request.user
-    #     comment.matching = get_object_or_404(Matching, pk=request.POST["matching_id"])
-    #
-    #     if form.is_valid():
-    #         comment.save()
-    #         return redirect('Matching:active_list')
-    #     else:
-    #         return redirect('Matching:active_list')
-    #
     def get(self, request, *args, **kwargs):
         """GETメソッドで呼ばれる関数"""
         self.object = None
@@ -61,41 +39,43 @@ class TopicDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         """HTMLファイルに変数を渡す関数。Get毎に呼ばれるっぽい"""
-        context = super().get_context_data(**kwargs)
-        # TODO:ここがエラー
+        # 同じユーザでview数を増やさない処理
+        session_key = 'viewed_topic_{}'.format(self.object.pk)
+        if not self.request.session.get(session_key, False):
+            self.object.views += 1
+            self.object.save()
+            self.request.session[session_key] = True
+        # Postリストを取得
         post_list = Post.objects.filter(topic=self.object)
-        context['post_list'] = post_list
-        return context
+        kwargs['post_list'] = post_list
+        return super().get_context_data(**kwargs)
 
 
-def topic_list(request):
-    """ページが存在しない場合は404エラー"""
-    topic = get_object_or_404(Topic, pk=pk)
-    return render(request, 'Board/topic_list.html', {'board': board})
+class TopicCreateView(generic.CreateView):
+    """新しくトピックと投稿するview"""
+    template_name = "Board/topic_create.html"
+    model = Topic
+    form_class = TopicForm
+    success_url = "/board"
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.starter = user
+        return super().form_valid(form)
 
 
-def new_topic(request, pk):
-    """新しくトピックを作成する"""
-    board = get_object_or_404(Board, pk=pk)
-    user = request.user
+class PostCreateView(generic.CreateView):
+    """新しくPostを投稿するview"""
+    template_name = "Board/post_create.html"
+    model = Post
+    form_class = PostForm
 
-    # Postメソッドの場合
-    if request.method == 'POST':
-        form = NewTopicForm(request.POST)   # 送信データインスタンス作成
-        # データのバリデーション実行
-        if form.is_valid():
-            topic = form.save(commit=False)
-            topic.board = board
-            topic.starter = user
-            topic.save()
-            post = Post.objects.create(
-                message=form.cleaned_data.get('message'),
-                topic=topic,
-                posted_by=user
-            )
-            # TODO : redirect to top page
-            return redirect('Board:topic_list', pk=board.pk)
-    else:
-        form = NewTopicForm()
+    # Post投稿後は、投稿先Topicページへ遷移
+    def get_success_url(self):
+        return reverse('Board:topic_detail', kwargs={'pk': self.object.topic.id})
 
-    return render(request, 'Board/new_topic.html', {'board': board, 'form': form})
+    # 親topicとpostユーザを格納して保存
+    def form_valid(self, form):
+        form.instance.topic = Topic.objects.get(id=self.kwargs['pk'])
+        form.instance.posted_by = self.request.user
+        return super().form_valid(form)
