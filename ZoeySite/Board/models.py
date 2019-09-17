@@ -4,6 +4,12 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.conf import settings
 import uuid
+from django.contrib.humanize.templatetags.humanize import naturaltime
+import re
+
+pattern = r"([\,]+),*(.*)"
+repeater = re.compile(pattern)
+
 DEFAULT_IMAGE = "../../media/default/no_image.png"
 
 
@@ -79,6 +85,12 @@ class Topic(models.Model):
         else:
             return self.image_thumbnail.url
 
+    def get_reply_count(self):
+        return self.posts.count()
+
+    # def get_update_humanize(self):
+    #     #TODO:カンマがない場合にNoneオブジェクトを返すのでエラーはいてる
+    #     return re.split(",", naturaltime(self.last_updated))[0]
 
 # トピックへの書き込み
 class Post(models.Model):

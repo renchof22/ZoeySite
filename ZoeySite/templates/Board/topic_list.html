@@ -1,38 +1,44 @@
 {% extends 'base_all.html' %}
 {% load humanize %}
-{% block title %}
-  {{ board.name }} - {{ block.super }}
-{% endblock %}
-
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'Board:home' %}">Boards</a></li>
-  <li class="breadcrumb-item active">{{ board.name }}</li>
-{% endblock %}
 
 {% block content %}
-  <div class="mb-4">
-    <a href="{% url 'Board:topic_create' %}" class="btn btn-primary">New topic</a>
-  </div>
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th>Topic</th>
-        <th>Starter</th>
-        <th>Replies</th>
-        <th>Views</th>
-        <th>Last Update</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for topic in topic_list %}
-        <tr>
-          <td><a href="{% url 'Board:topic_detail' topic.id %}"> {{ topic.subject }}</a></td>
-          <td>{{ topic.starter.username }}</td>
-          <td>0</td>
-          <td>{{ topic.views }}</td>
-          <td>{{ topic.last_updated|naturaltime }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="container">
+    <div class="mb-4">
+        <a href="{% url 'Board:topic_create' %}" class="btn btn-primary">New topic</a>
+    </div>
+    {% for topic in topic_list %}
+    <div class="card mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-3 col-md-4">
+                <img class="topic_image_thumbnail" src="{{ topic.get_image }}" alt="image">
+            </div>
+            <div class="col-9 col-md-8">
+                <div class="card-header">
+                    <div class="row">
+                        <p class="card-text views"><i class="fas fa-eye"></i>{{ topic.views }} view</p>
+                        <p class="card-text updated"><i class="fas fa-clock"></i>{{ topic.last_updated|naturaltime }}</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row topic-userinfo">
+                        <p class="card-text">
+                            <img class="image_thumbnail" src="{{ user.get_image_thumbnail }}"  alt="image">
+                            {{ topic.starter.username }}</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <p class="card-text">
+                                <a href="{% url 'Board:topic_detail' topic.id%}">{{ topic.subject }}</a>
+                            </p>
+                        </div>
+                        <div class="col-2 px-0">
+                            <p class="card-text"><small class="text-muted"><i class="fas fa-comment-dots"></i>{{ topic.get_reply_count }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

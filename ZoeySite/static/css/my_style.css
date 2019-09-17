@@ -36,6 +36,7 @@ body {
 /*ナビバー表示サムネイル*/
 .image_thumbnail {
     border-radius: 50%;
+    height:30px;
 }
 
 /* index.html:画像表示 */
@@ -105,4 +106,45 @@ body {
 
 .button_wrapper{
    text-align:center;
+}
+
+.topic_image_thumbnail{
+    width:100%;
+    height:auto;
+}
+
+/*トピック一覧のHeaderサイズ調整*/
+.card-header{
+    padding: 0rem 1.25rem;
+    margin-bottom: 0;
+    background-color: rgba(0,0,0,.03);
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    height: 20%;
+    font-size:75%
+}
+
+/*トピック一覧のCardのHeaderに対して、viewとdateの間隔*/
+.card-header p{
+    margin-right:20px;
+}
+
+/*  font-awesomeの<i>タグは<svg>に変換される
+    アイコンと文字を2px開ける
+*/
+p.card-text svg {
+    margin-right:2px;
+}
+
+.topic-userinfo{
+    font-size:80%;
+    height:50%;
+}
+
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding-top: 0.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 0rem;
+    padding-left: 1.25rem;
 }
