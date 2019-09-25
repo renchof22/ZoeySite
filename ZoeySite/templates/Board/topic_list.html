@@ -1,40 +1,82 @@
 {% extends 'base_all.html' %}
 {% load humanize %}
-
 {% block content %}
+
+<div class="my-fixed-bottom">
+    <a href="{% url 'Board:topic_create' %}" id="fab"><span><i class="fas fa-pencil-alt"></i></span></a>
+</div>
+
+<nav class="justify-content-center navbar navbar-expand navbar-dark bg-dark mt-0 mb-3 sub-navbar">
+    <ul class="nav navbar-nav">
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLin1" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Fortnite
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+                <a class="dropdown-item" href="#">ALL</a>
+                <a class="dropdown-item" href="#">Fortnite</a>
+                <a class="dropdown-item" href="#">ApexLegends</a>
+                <a class="dropdown-item" href="#">MH:W</a>
+            </div>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLin2" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                新着順
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                <a class="dropdown-item" href="#">新着順</a>
+                <a class="dropdown-item" href="#">ビュー数</a>
+                <a class="dropdown-item" href="#">返信数</a>
+            </div>
+        </li>
+        <li class="dropdown">
+            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink3" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                今日
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
+                <a class="dropdown-item" href="#">今日</a>
+                <a class="dropdown-item" href="#">1週間</a>
+                <a class="dropdown-item" href="#">1カ月</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
 <div class="container">
-    <div class="mb-4">
-        <a href="{% url 'Board:topic_create' %}" class="btn btn-primary">New topic</a>
-    </div>
     {% for topic in topic_list %}
     <div class="card mb-3" style="max-width: 540px;">
         <div class="row no-gutters">
             <div class="col-3 col-md-4">
-                <img class="topic_image_thumbnail" src="{{ topic.get_image }}" alt="image">
+                <a href="{% url 'Board:topic_detail' topic.id%}">
+                    <img class="topic_image_thumbnail" src="{{ topic.get_image }}" alt="image">
+                </a>
             </div>
             <div class="col-9 col-md-8">
                 <div class="card-header">
-                    <div class="row">
-                        <p class="card-text views"><i class="fas fa-eye"></i>{{ topic.views }} view</p>
-                        <p class="card-text updated"><i class="fas fa-clock"></i>{{ topic.last_updated|naturaltime }}</p>
+                    <div class="card-text"><small class="text-muted">
+                        <i class="fas fa-eye"></i>{{ topic.views }} view
+                        <i class="fas fa-comment-dots"></i>{{ topic.get_reply_count }}
+                        <i class="fas fa-clock"></i>{{ topic.last_updated|naturaltime }}
+                    </small>
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="row topic-userinfo">
-                        <p class="card-text">
-                            <img class="image_thumbnail" src="{{ user.get_image_thumbnail }}"  alt="image">
-                            {{ topic.starter.username }}</p>
+                    <div class="topic-list-userinfo">
+                        <span class="card-text mr-2">
+                            <img class="topic-list-image_thumbnail" src="{{ topic.starter.get_image_thumbnail }}"
+                                 alt="image">
+                            {{ topic.starter.username }}
+                        </span>
+                        <span class="tag">Fortnite</span>
+                        <span class="tag">おもしろ</span>
                     </div>
-                    <div class="row">
-                        <div class="col-10">
-                            <p class="card-text">
-                                <a href="{% url 'Board:topic_detail' topic.id%}">{{ topic.subject }}</a>
-                            </p>
-                        </div>
-                        <div class="col-2 px-0">
-                            <p class="card-text"><small class="text-muted"><i class="fas fa-comment-dots"></i>{{ topic.get_reply_count }}</small></p>
-                        </div>
-                    </div>
+                    <p class="card-text topic-list-body mt-1">
+                        <a href="{% url 'Board:topic_detail' topic.id%}">
+                            {{ topic.subject | truncatechars:40}}</a>
+                    </p>
                 </div>
             </div>
         </div>
