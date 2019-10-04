@@ -1,17 +1,90 @@
 {% extends 'base_all.html' %}
-
 {% block title %}Start a New Topic{% endblock %}
 
-{% block breadcrumb %}
-  <li class="breadcrumb-item"><a href="{% url 'Board:home' %}">Boards</a></li>
-  <li class="breadcrumb-item"><a href="{% url 'Board:topic_list' board.pk %}">{{ board.name }}</a></li>
-  <li class="breadcrumb-item active">New topic</li>
+{% block stylesheet %}
+<link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
 {% endblock %}
 
 {% block content %}
-  <form method="post" novalidate>
+<form method="post" novalidate>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+    <div class="field">
+        {{ filed.label_tag }}
+        {{ field }}
+        {% if field.help_text %}
+        <span class="helptext">{{ field.help_text }}</span>
+        {% endif %}
+        {{ field.errors }}
+    </div>
+    {% endfor %}
+    <div class="field">
+        <button type="submit" class="btn btn-success">Post</button>
+    </div>
+    <input style="display:none" accept="image/gif,image/jpeg,image/jpg,image/png" type="file" id="upInput"
+           ref="upInput">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Post</button>
-  </form>
+</form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var easyMDE = new EasyMDE({
+autoDownloadFontAwesome: false,
+            toolbar: [{
+                name: "preview",
+                action: EasyMDE.togglePreview,
+                className: "fas fa-eye",
+                title: "プレビュー",
+            },　'|' ,{
+                name: "bold",
+                action: EasyMDE.toggleBold,
+                className: "fas fa-bold",
+                title: "太字",
+            },{
+                name: "italic",
+                action: EasyMDE.toggleItalic,
+                className: "fas fa-italic",
+                title: "斜字",
+            },{
+                name: "heading",
+                action: EasyMDE.toggleHeadingSmaller,
+                className: "fas fa-heading",
+                title: "見出し",
+            }, '|', {
+                name: "strikethrough",
+                action: EasyMDE.toggleStrikethrough,
+                className: "fas fa-strikethrough",
+                title: "取り消し線",
+            },{
+                name: "quote",
+                action: EasyMDE.toggleBlockquote,
+                className: "fas fa-quote-left",
+                title: "引用",
+            }, '|', {
+                name: "unordered-list",
+                action: EasyMDE.toggleUnorderedList,
+                className: "fas fa-list-ul",
+                title: "リスト",
+            },{
+                name: "ordered-list",
+                action: EasyMDE.toggleOrderedList,
+                className: "fas fa-list-ol",
+                title: "番号リスト",
+            }, '|', {
+                name: "table",
+                action: EasyMDE.drawTable,
+                className: "fas fa-table",
+                title: "表",
+            }, '|', {
+                name: "link",
+                action: EasyMDE.drawLink,
+                className: "fas fa-link",
+                title: "リンク",
+            }],
+            initialValue: '## Custom Toolbar \n Custom functions, icons and buttons can be defined for the toolbar.'
+     });
+
+</script>
 {% endblock %}

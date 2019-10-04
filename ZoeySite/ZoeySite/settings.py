@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'Tournament',
     'bootstrap_datepicker_plus',
     'bootstrap4',
-    'django.contrib.humanize'
+    'django.contrib.humanize',
+    'markdownx'
 ]
 
 MIDDLEWARE = [

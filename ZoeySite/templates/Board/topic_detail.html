@@ -28,7 +28,7 @@
             <div class="tag">ナイスプレイ</div>
             <!-- ここでfor文入れる -->
 
-            <p class="card-text my-1">{{ topic_instance.subject }}</p>
+            <p class="card-text my-1">{{ topic_instance.formatted_markdown|safe }}</p>
         </div>
         <img class="card-img-bottom" src="{{ topic_instance.get_image }}" alt="カードの画像">
         <div class="card-footer">
@@ -58,9 +58,4 @@
     </div>
     {% endfor %}
 </div>
-
-<div class="mb-4">
-    <a href="{% url 'Board:post_create' topic_instance.id %}" class="btn btn-primary">書き込む</a>
-</div>
-
 {% endblock %}

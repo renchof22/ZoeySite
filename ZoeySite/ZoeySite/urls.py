@@ -28,6 +28,7 @@ urlpatterns = [
     path('board/', include('Board.urls')),
     path('match/', include('Matching.urls')),
     path('tournament/', include('Tournament.urls')),
+    path('markdownx/', include('markdownx.urls')),
 ]
 
 if settings.DEBUG:

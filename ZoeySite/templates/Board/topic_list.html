@@ -75,7 +75,7 @@
                     </div>
                     <p class="card-text topic-list-body mt-1">
                         <a href="{% url 'Board:topic_detail' topic.id%}">
-                            {{ topic.subject | truncatechars:40}}</a>
+                            {{ topic.formatted_markdown|safe|truncatechars:40}}</a>
                     </p>
                 </div>
             </div>

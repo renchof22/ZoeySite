@@ -6,6 +6,8 @@ from django.conf import settings
 import uuid
 from django.contrib.humanize.templatetags.humanize import naturaltime
 import re
+from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 pattern = r"([\,]+),*(.*)"
 repeater = re.compile(pattern)
@@ -53,7 +55,7 @@ class Board(models.Model):
 
 class Topic(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    subject = models.CharField(max_length=255)
+    contents = MarkdownxField('Contents', help_text='To Write with Markdown format')
     last_updated = models.DateTimeField(auto_now_add=True)
     board = models.ForeignKey(Board, related_name='topics', on_delete=models.SET_NULL, null=True)
     starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='topics', on_delete=models.SET_NULL, null=True)
@@ -69,7 +71,7 @@ class Topic(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "{0} , {1}".format(self.id, self.subject)
+        return "{0}".format(self.id)
 
     def get_image(self):
         if not self.image:
@@ -88,9 +90,8 @@ class Topic(models.Model):
     def get_reply_count(self):
         return self.posts.count()
 
-    # def get_update_humanize(self):
-    #     #TODO:カンマがない場合にNoneオブジェクトを返すのでエラーはいてる
-    #     return re.split(",", naturaltime(self.last_updated))[0]
+    def formatted_markdown(self):
+        return markdownify(self.contents)
 
 # トピックへの書き込み
 class Post(models.Model):
