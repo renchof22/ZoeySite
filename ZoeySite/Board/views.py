@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .models import Board, Topic, Post
+from .models import Tag, Topic, Post
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -11,9 +11,9 @@ from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormMixin
 from django.urls import reverse
 
 
-def home(request):
-    boards = Board.objects.all()
-    return render(request, 'Board/home.html', {'boards': boards})
+# def home(request):
+#     boards = Board.objects.all()
+#     return render(request, 'Board/home.html', {'boards': boards})
 
 
 class TopicListView(ProcessFormView, generic.ListView):
@@ -47,22 +47,31 @@ class TopicDetailView(generic.DetailView):
             self.request.session[session_key] = True
         # Postリストを取得
         post_list = Post.objects.filter(topic=self.object)
+        # Tagリストを取得
+        tag_list = Tag.objects.filter(topic=self.object)
         kwargs['post_list'] = post_list
+        kwargs['tag_list'] = tag_list
         return super().get_context_data(**kwargs)
 
 
 class TopicCreateView(generic.CreateView):
-    """新しくトピックと投稿するview"""
+    """新しくトピックを作成するview"""
     template_name = "Board/topic_create.html"
     model = Topic
     form_class = TopicForm
     success_url = "/board"
 
     def form_valid(self, form):
-        user = self.request.user
-        form.instance.starter = user
+        # saveはせず、モデルを受け取る
+        update = form.save(commit=False)
+        # starterを設定
+        update.starter = self.request.user
+        # saveする
+        update.save()
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
 class PostCreateView(generic.CreateView):
     """新しくPostを投稿するview"""

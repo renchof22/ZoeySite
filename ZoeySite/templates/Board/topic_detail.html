@@ -19,15 +19,10 @@
                 </h5>
 
             </div>
-
-            <!-- ここでfor文入れる -->
-            <div class="tag">Fortnite</div>
-            <div class="tag">おもしろ</div>
-            <div class="tag">ナイスプレイ</div>
-            <div class="tag">ナイスプレイ</div>
-            <div class="tag">ナイスプレイ</div>
-            <!-- ここでfor文入れる -->
-
+            <div class="tag">{{ topic_instance.game }}</div>
+            {% for tag in tag_list %}
+                <div class="tag">{{ tag }}</div>
+            {% endfor %}
             <p class="card-text my-1">{{ topic_instance.formatted_markdown|safe }}</p>
         </div>
         <img class="card-img-bottom" src="{{ topic_instance.get_image }}" alt="カードの画像">

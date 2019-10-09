@@ -71,12 +71,22 @@ body {
 }
 
 
-/* ログインボタン */
+/* Button */
 .login-btn {
     background-color:#202020;
     color:#7c4cd7;
     border-color:#7c4cd7;
     font-weight:bold;
+}
+
+.upload-img-btn {
+    border-radius: 4px;
+    max-width: 150px;
+    text-align: center;
+    display: block;
+    background-color: #f1f1f1;
+    box-shadow:  0 2px 6px rgba(146, 146, 146, 0.8);
+    cursor: pointer;
 }
 
 .toggle-hide-input{

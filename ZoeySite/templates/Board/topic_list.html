@@ -70,8 +70,10 @@
                                  alt="image">
                             {{ topic.starter.username }}
                         </span>
-                        <span class="tag">Fortnite</span>
-                        <span class="tag">おもしろ</span>
+                        <span class="tag">{{topic.game}}</span>
+                        {% for tag in topic.get_tags %}
+                            <span class="tag">{{tag}}</span>
+                        {% endfor %}
                     </div>
                     <p class="card-text topic-list-body mt-1">
                         <a href="{% url 'Board:topic_detail' topic.id%}">

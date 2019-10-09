@@ -8,61 +8,38 @@ from django.contrib.humanize.templatetags.humanize import naturaltime
 import re
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
+from .consts import GAME_LIST
 
 pattern = r"([\,]+),*(.*)"
 repeater = re.compile(pattern)
 
 DEFAULT_IMAGE = "../../media/default/no_image.png"
 
-
-# 掲示板モデル
-class Board(models.Model):
-    # 掲示板名
-    name = models.CharField(max_length=30)
-    # 掲示板概要
-    description = models.CharField(max_length=300)
-    # 最終書き込み日時
-    last_updated = models.DateTimeField(auto_now_add=True)
-    # ボード作成者
-    creater = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='boards', on_delete=models.SET_NULL, null=True)
-    # ボード画像
-    image = models.ImageField(upload_to='avatars')
-    # ボード画像サムネイル
-    image_thumbnail = ImageSpecField(source='image',
-                                     processors=[ResizeToFill(50, 50)],
-                                     format='JPEG',
-                                     options={'quality': 60})
-
-    objects = models.Manager()
+class Tag(models.Model):
+    """
+    This model associate with Topic.
+    User can create and select tag when create Topic.
+    """
+    tag = models.CharField(max_length=32)
 
     def __str__(self):
-        return "{0} , {1}".format(self.id, self.name)
-
-    def get_image(self):
-        if not self.image:
-            # depending on your template
-            return DEFAULT_IMAGE
-        else:
-            return self.image.url
-
-    def get_image_thumbnail(self):
-        if not self.image_thumbnail:
-            # depending on your template
-            return DEFAULT_IMAGE
-        else:
-            return self.image_thumbnail.url
+        return "{0}".format(self.tag)
 
 
 class Topic(models.Model):
+    """
+    This model is main-contents in Board.
+    User create a topic and be reply fro any Users.
+    Automatically be added views, reply-count and update-time.
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    contents = MarkdownxField('Contents', help_text='To Write with Markdown format')
+    contents = MarkdownxField('Contents')
     last_updated = models.DateTimeField(auto_now_add=True)
-    board = models.ForeignKey(Board, related_name='topics', on_delete=models.SET_NULL, null=True)
     starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='topics', on_delete=models.SET_NULL, null=True)
     views = models.PositiveIntegerField(default=0)
-    # ボード画像
-    image = models.ImageField(upload_to='avatars')
-    # ボード画像サムネイル
+    game = models.CharField(max_length=32, choices=GAME_LIST, null=True)
+    tags = models.ManyToManyField(Tag, blank=True)
+    image = models.ImageField(upload_to='topic_images', blank=True, null=True)
     image_thumbnail = ImageSpecField(source='image',
                                      processors=[ResizeToFill(50, 50)],
                                      format='JPEG',
@@ -75,14 +52,12 @@ class Topic(models.Model):
 
     def get_image(self):
         if not self.image:
-            # depending on your template
             return DEFAULT_IMAGE
         else:
             return self.image.url
 
     def get_image_thumbnail(self):
         if not self.image_thumbnail:
-            # depending on your template
             return DEFAULT_IMAGE
         else:
             return self.image_thumbnail.url
@@ -93,9 +68,15 @@ class Topic(models.Model):
     def formatted_markdown(self):
         return markdownify(self.contents)
 
-# トピックへの書き込み
+    def get_tags(self):
+        return self.tags.all()
+
+
 class Post(models.Model):
-    message = models.TextField(max_length=4000)
+    """
+    This models is reply to a Topic.
+    """
+    message = models.TextField(max_length=1024)
     topic = models.ForeignKey(Topic, related_name='posts', on_delete=models.CASCADE)
     posted_at = models.DateTimeField(auto_now_add=True)
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.SET_NULL, null=True)
