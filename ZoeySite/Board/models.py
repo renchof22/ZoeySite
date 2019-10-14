@@ -9,6 +9,7 @@ import re
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 from .consts import GAME_LIST
+from django.utils import timezone
 
 pattern = r"([\,]+),*(.*)"
 repeater = re.compile(pattern)
@@ -34,7 +35,7 @@ class Topic(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contents = MarkdownxField('Contents')
-    last_updated = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(default=timezone.now)
     starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='topics', on_delete=models.SET_NULL, null=True)
     views = models.PositiveIntegerField(default=0)
     game = models.CharField(max_length=32, choices=GAME_LIST, null=True)
@@ -48,7 +49,7 @@ class Topic(models.Model):
     objects = models.Manager()
 
     def __str__(self):
-        return "{0}".format(self.id)
+        return "{0},{1}".format(self.game, self.last_updated, )
 
     def get_image(self):
         if not self.image:

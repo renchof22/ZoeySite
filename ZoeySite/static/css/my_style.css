@@ -170,8 +170,8 @@ body {
 .my-fixed-bottom {
     position: fixed;
     z-index: 1030;
-    top:calc(95% - 50px/2);
-    left:calc(50% - 50px/2);
+    top: calc(95% - 50px/2);
+    right: 10%;
 }
 
 #fab {/*円の部分*/
@@ -343,3 +343,53 @@ body {
 .post a{
     color: #343a40;
 }
+
+/* プリダウンメニュー */
+.selectdiv {
+    position: relative;
+    height: 30px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+.selectdiv:after {
+    font-family: "Font Awesome 5 Free";
+    content: '\f107';
+    font-weight: 900;
+    position: absolute;
+    right: 0px;
+    margin: 0 1px 0 0;
+    color: #333;
+    pointer-events: none;
+    top: 50%;
+    -webkit-transform : translateY(-50%);
+    transform : translateY(-50%);
+}
+
+.selectdiv select {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform : translate(-50%,-50%);
+    transform : translate(-50%,-50%);
+    width: 100%;
+    padding: 0px 0px 0px 3px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 12px;
+    line-height: 1.75;
+    color: #333;
+    background-image: none;
+    border: none;
+    -ms-word-break: normal;
+    word-break: normal;
+}
+.row .border-group+ .border-group {
+    border-left: 1px solid #333;
+}
+

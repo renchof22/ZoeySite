@@ -6,46 +6,30 @@
     <a href="{% url 'Board:topic_create' %}" id="fab"><span><i class="fas fa-pencil-alt"></i></span></a>
 </div>
 
-<nav class="justify-content-center navbar navbar-expand navbar-dark bg-dark mt-0 mb-3 sub-navbar">
-    <ul class="nav navbar-nav">
-        <li class="dropdown">
-            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLin1" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Fortnite
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
-                <a class="dropdown-item" href="#">ALL</a>
-                <a class="dropdown-item" href="#">Fortnite</a>
-                <a class="dropdown-item" href="#">ApexLegends</a>
-                <a class="dropdown-item" href="#">MH:W</a>
-            </div>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLin2" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                新着順
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
-                <a class="dropdown-item" href="#">新着順</a>
-                <a class="dropdown-item" href="#">ビュー数</a>
-                <a class="dropdown-item" href="#">返信数</a>
-            </div>
-        </li>
-        <li class="dropdown">
-            <a class="dropdown-toggle" href="#" id="navbarDropdownMenuLink3" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                今日
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
-                <a class="dropdown-item" href="#">今日</a>
-                <a class="dropdown-item" href="#">1週間</a>
-                <a class="dropdown-item" href="#">1カ月</a>
-            </div>
-        </li>
-    </ul>
-</nav>
-
 <div class="container">
+    <form method="POST">
+        <div class="row py-2" style="background-color:#777777;">
+            {% csrf_token %}
+            <div class="col-4 px-2 align-self-center border-group">
+                <div class="selectdiv">
+                    {{ search_form.game }}
+                </div>
+            </div>
+            <div class="col-5 px-2 align-self-center border-group">
+                <div class="selectdiv">
+                    {{ search_form.order }}
+                </div>
+            </div>
+            <div class="col-3 px-2 align-self-center border-group">
+                <div class="selectdiv">
+                    {{ search_form.date }}
+                </div>
+            </div>
+        </div>
+<!--        <input class="btn btn-success offset-md-8 col-md-3" type="submit" id="button" name="button" value="検索">-->
+
+    </form>
+
     {% for topic in topic_list %}
     <div class="card mb-3" style="max-width: 540px;">
         <div class="row no-gutters">
@@ -72,7 +56,7 @@
                         </span>
                         <span class="tag">{{topic.game}}</span>
                         {% for tag in topic.get_tags %}
-                            <span class="tag">{{tag}}</span>
+                        <span class="tag">{{tag}}</span>
                         {% endfor %}
                     </div>
                     <p class="card-text topic-list-body mt-1">

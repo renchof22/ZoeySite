@@ -1,10 +1,11 @@
 from django import forms
 from .models import Topic, Post, Tag
-from .consts import GAME_LIST
+from .consts import *
+
 
 class TopicForm(forms.ModelForm):
-
     text_tag = forms.CharField(max_length=160, required=False)
+
     class Meta:
         model = Topic
         fields = ('game', 'contents', 'image', 'tags')
@@ -30,6 +31,19 @@ class TopicForm(forms.ModelForm):
             else:
                 instance.tags.create(tag=t)
         return instance
+
+
+class TopicSearchForm(forms.Form):
+    """
+        topic_list.htmlにて、クエリセットを絞り込み・並び替えするためのフォーム
+    """
+    game = forms.ChoiceField(label='ゲーム', choices=GAME_LIST, required=False,
+                             widget=forms.Select(attrs={"onChange": 'this.form.submit()'}))
+    date = forms.ChoiceField(label='日付', choices=DATE_LIST, required=False,
+                             widget=forms.Select(attrs={"onChange": 'this.form.submit()'}))
+    order = forms.ChoiceField(label='並び', choices=ORDER_LIST, required=False,
+                              widget=forms.Select(attrs={"onChange": 'this.form.submit()'}))
+
 
 class PostForm(forms.ModelForm):
     class Meta:

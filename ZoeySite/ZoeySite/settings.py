@@ -154,3 +154,20 @@ MEDIA_URL = '/media/'
 
 # なんかデバック用のやつ
 INTERNAL_IPS = ['127.0.0.1', '192.168.33.1']
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    }
+}

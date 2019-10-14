@@ -5,15 +5,12 @@ from .models import Tag, Topic, Post
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from .forms import TopicForm, PostForm
+from .forms import TopicForm, PostForm, TopicSearchForm
 from django.views import generic
 from django.views.generic.edit import ModelFormMixin, ProcessFormView, FormMixin
 from django.urls import reverse
-
-
-# def home(request):
-#     boards = Board.objects.all()
-#     return render(request, 'Board/home.html', {'boards': boards})
+from django.db.models import Q
+from .consts import *
 
 
 class TopicListView(ProcessFormView, generic.ListView):
@@ -22,13 +19,68 @@ class TopicListView(ProcessFormView, generic.ListView):
     paginate_by = 10         # 一ページに出力する件数指定
     context_object_name = "topic_list"     # html内でtopic_listという名前で使えるようにする
     template_name = "Board/topic_list.html"
-    ordering = ['last_updated']
 
     def get(self, request, *args, **kwargs):
-        """GETメソッドで呼ばれる関数"""
+        """GETメソッド時呼び出し関数"""
+        # request.session.clear()
         self.object = None
         self.object_list = self.get_queryset()
         return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        """
+            POSTメソッド時呼び出し関数（検索条件入力時）
+            役割：セッションに検索条件を渡す
+        """
+        # HTMLからの入力保持
+        form_value = [
+            self.request.POST.get('game', None),
+            self.request.POST.get('date', None),
+            self.request.POST.get('order', None),
+        ]
+        # 検索条件をセッションに保存
+        request.session['form_value'] = form_value
+        # 検索時にページネーションに関連したエラーを防ぐ
+        self.request.GET = self.request.GET.copy()
+        self.request.GET.clear()
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        """
+            役割：セッションを読み、検索条件の初期値を設定する
+        """
+        context = super().get_context_data(**kwargs)
+        game = ''
+        date = ''
+        order = ''
+        # sessionに値がある:既存値をセット（ページングしてもform値変えない）
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            game = form_value[0]
+            date = form_value[1]
+            order = form_value[2]
+        default_data = {'game': game, 'date': date, 'order': order}
+        search_form = TopicSearchForm(initial=default_data)
+        context['search_form'] = search_form
+        return context
+
+    def get_queryset(self):
+        """
+            役割：セッションの検索条件に応じたクエリセットを発行する
+        """
+        # sessionに値がある場合、その値でクエリ発行する。
+        if 'form_value' in self.request.session:
+            form_value = self.request.session['form_value']
+            game = form_value[0]
+            date = form_value[1]
+            order = form_value[2]
+            end, start = get_date_range(date)
+            print(start, end)
+            # 検索条件
+            return Topic.objects.select_related().filter(game__icontains=game, last_updated__range=[start, end]).order_by(order)
+        else:
+            # 何も返さない
+            return Topic.objects.none()
 
 
 class TopicDetailView(generic.DetailView):
@@ -72,6 +124,7 @@ class TopicCreateView(generic.CreateView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
 
 class PostCreateView(generic.CreateView):
     """新しくPostを投稿するview"""
