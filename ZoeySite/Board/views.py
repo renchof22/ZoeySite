@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from .models import Tag, Topic, Post
+from .models import *
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -13,11 +13,17 @@ from django.db.models import Q
 from .consts import *
 
 
+class TopicIndexView(generic.ListView):
+    model = Game
+    context_object_name = "game_list"
+    template_name = "Board/topic_index.html"
+
+
 class TopicListView(ProcessFormView, generic.ListView):
     """トピック一覧を表示するビュー"""
-    model = Topic           # モデル指定
-    paginate_by = 10         # 一ページに出力する件数指定
-    context_object_name = "topic_list"     # html内でtopic_listという名前で使えるようにする
+    model = Topic  # モデル指定
+    paginate_by = 10  # 一ページに出力する件数指定
+    context_object_name = "topic_list"  # html内でtopic_listという名前で使えるようにする
     template_name = "Board/topic_list.html"
 
     def get(self, request, *args, **kwargs):
@@ -34,7 +40,7 @@ class TopicListView(ProcessFormView, generic.ListView):
         """
         # HTMLからの入力保持
         form_value = [
-            self.request.POST.get('game', None),
+            # self.request.POST.get('game', None),
             self.request.POST.get('date', None),
             self.request.POST.get('order', None),
         ]
@@ -50,18 +56,19 @@ class TopicListView(ProcessFormView, generic.ListView):
             役割：セッションを読み、検索条件の初期値を設定する
         """
         context = super().get_context_data(**kwargs)
-        game = ''
+        # game = ''
         date = ''
         order = ''
         # sessionに値がある:既存値をセット（ページングしてもform値変えない）
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
-            game = form_value[0]
-            date = form_value[1]
-            order = form_value[2]
-        default_data = {'game': game, 'date': date, 'order': order}
+            # game = form_value[0]
+            date = form_value[0]
+            order = form_value[1]
+        default_data = {'date': date, 'order': order}
         search_form = TopicSearchForm(initial=default_data)
         context['search_form'] = search_form
+        context['game'] = self.kwargs['game']
         return context
 
     def get_queryset(self):
@@ -71,13 +78,15 @@ class TopicListView(ProcessFormView, generic.ListView):
         # sessionに値がある場合、その値でクエリ発行する。
         if 'form_value' in self.request.session:
             form_value = self.request.session['form_value']
-            game = form_value[0]
-            date = form_value[1]
-            order = form_value[2]
+            # game = form_value[0]
+            game = self.kwargs['game']
+            date = form_value[0]
+            order = form_value[1]
             end, start = get_date_range(date)
             print(start, end)
             # 検索条件
-            return Topic.objects.select_related().filter(game__icontains=game, last_updated__range=[start, end]).order_by(order)
+            return Topic.objects.select_related().filter(game__title=game,
+                                                         last_updated__range=[start, end]).order_by(order)
         else:
             # 何も返さない
             return Topic.objects.none()
@@ -103,6 +112,7 @@ class TopicDetailView(generic.DetailView):
         tag_list = Tag.objects.filter(topic=self.object)
         kwargs['post_list'] = post_list
         kwargs['tag_list'] = tag_list
+        kwargs['game'] = self.kwargs['game']
         return super().get_context_data(**kwargs)
 
 
@@ -118,8 +128,10 @@ class TopicCreateView(generic.CreateView):
         update = form.save(commit=False)
         # starterを設定
         update.starter = self.request.user
+        update.game = Game.objects.get(title=self.kwargs['game'])
         # saveする
         update.save()
+        form.save_m2m()
         return super().form_valid(form)
 
     def form_invalid(self, form):

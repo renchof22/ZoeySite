@@ -1,9 +1,10 @@
 {% extends 'base_all.html' %}
 {% load humanize %}
+{% load board_templatetags %}
 {% block content %}
 
 <div class="my-fixed-bottom">
-    <a href="{% url 'Board:post_create' topic_instance.id %}" id="fab"><span><i class="fas fa-reply"></i></span></a>
+    <a href="{% url 'Board:post_create' game.title topic_instance.id %}" id="fab"><span><i class="fas fa-reply"></i></span></a>
 </div>
 
 <div class="container mt-2">
@@ -11,7 +12,7 @@
         <div class="card-body">
             <div class="card-title mb-0">
                 <h5 class="mb-0">
-                    <img id="starter" src="{{ user.get_image_thumbnail }}" alt="image">
+                    <img class="image-thumbnail" id="starter" src="{{ topic_instance.starter.get_image }}" alt="image">
                     {{ topic_instance.starter.username }}
                     <small class="text-muted ml-3">
                         <i class="fas fa-clock"></i>{{ topic_instance.last_updated }}
@@ -23,7 +24,7 @@
             {% for tag in tag_list %}
                 <div class="tag">{{ tag }}</div>
             {% endfor %}
-            <p class="card-text my-1">{{ topic_instance.formatted_markdown|safe }}</p>
+            <p class="card-text my-1">{{ topic_instance.contents | markdown_to_html }}</p>
         </div>
         <img class="card-img-bottom" src="{{ topic_instance.get_image }}" alt="カードの画像">
         <div class="card-footer">
@@ -42,7 +43,7 @@
         <div class="card-body">
             <div class="card-title mb-0">
                 <a href="{% url 'Accounts:user_detail' user.pk %}">
-                    <img src="{{ post.posted_by.get_image_thumbnail }}" alt="image">
+                    <img src="{{ post.posted_by.get_image }}" alt="image">
                     {{ post.posted_by.username }}
 
                 </a>

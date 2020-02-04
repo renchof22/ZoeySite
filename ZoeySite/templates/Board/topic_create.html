@@ -7,36 +7,69 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <form method="post" novalidate>
+<div class="container mt-2">
+    <form method="post" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
         {{ form.non_field_errors }}
-        <div class="field">
-            {{ form.game.label_tag }}
-            {{ form.game }}
-            <span class="helptext">{{ form.game.help_text }}</span>
-            {{ form.game.errors }}
-        </div>
-        <div class="field">
-            {{ form.text_tag }}
-        </div>
         <div class="field">
             {{ form.contents }}
             <span class="helptext">{{ form.contents.help_text }}</span>
             {{ form.contents.errors }}
         </div>
-        <div class="field">
-            <label class="upload-img-btn">
-                <i class="fas fa-image"></i>画像を選択{{ form.image }}
+        <!-- 切り替えボタンの設定 data-targetをusernameでネーミングしておかないとモーダル毎でUserを分けれない -->
+        <div class="btn-wrapper my-1">
+            <button class="btn btn-dot" type="button" data-toggle="modal" data-target="#select-tag">
+                <i class="fas fa-tags"></i>タグを選択
+            </button>
+        </div>
+
+        <div class="btn-wrapper field my-1">
+            <label class="btn btn-dot">
+                <i class="fas fa-image"></i>画像を挿入{{ form.image }}
             </label>
             <span class="helptext">{{ form.image.help_text }}</span>
             {{ form.image.errors }}
         </div>
+        {{ form.media }}
 
         <div class="field">
-            <button type="submit" class="btn btn-success">Post</button>
+            <button type="submit" class="btn btn-success w-100">投稿</button>
         </div>
-        {% csrf_token %}
+
     </form>
+
+    <img id="image-preview">
+
+
+    <!-- モーダル -->
+    <div class="field mt-3">
+        <div class="modal fade" id="select-tag" tabindex="-1" role="dialog" aria-labelledby="label1"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="label1">タグを選択</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="tag-wrapper" role="group" data-toggle="buttons">
+                            {% for checkbox in form.tags %}
+                            <label class="btn btn-primary w-40">
+                                {{ checkbox.tag }} {{ checkbox.choice_label }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% endblock %}
 </div>
 
@@ -50,7 +83,6 @@
 		delay: 1000,
 	},
 	status: false,
-	uploadImage: false,
     toolbar: [
         "preview",
         {
@@ -101,7 +133,6 @@
         }
     ],
 });
-
 
 
 </script>

@@ -1,47 +1,44 @@
 {% extends 'base_all.html' %}
 {% load humanize %}
+{% load board_templatetags %}
 {% block content %}
 
 <div class="my-fixed-bottom">
-    <a href="{% url 'Board:topic_create' %}" id="fab"><span><i class="fas fa-pencil-alt"></i></span></a>
+    <a href="{% url 'Board:topic_create' game.title %}" id="fab"><span><i class="fas fa-pencil-alt"></i></span></a>
 </div>
 
-<div class="container">
+<div class="container main-bg">
+    <div class="row">
+        <div class="col-12" id="{{ game.title }}"></div>
+    </div>
     <form method="POST">
-        <div class="row py-2" style="background-color:#777777;">
-            {% csrf_token %}
-            <div class="col-4 px-2 align-self-center border-group">
-                <div class="selectdiv">
-                    {{ search_form.game }}
-                </div>
-            </div>
-            <div class="col-5 px-2 align-self-center border-group">
+        {% csrf_token %}
+        <div class="row mb-2">
+            <div class="col-4 px-2 align-self-center">
                 <div class="selectdiv">
                     {{ search_form.order }}
                 </div>
             </div>
-            <div class="col-3 px-2 align-self-center border-group">
+            <div class="col-3 px-2 align-self-center">
                 <div class="selectdiv">
                     {{ search_form.date }}
                 </div>
             </div>
         </div>
-<!--        <input class="btn btn-success offset-md-8 col-md-3" type="submit" id="button" name="button" value="検索">-->
-
     </form>
 
     {% for topic in topic_list %}
-    <div class="card mb-3" style="max-width: 540px;">
+    <div class="card mb-3">
         <div class="row no-gutters">
             <div class="col-3 col-md-4">
-                <a href="{% url 'Board:topic_detail' topic.id%}">
+                <a href="{% url 'Board:topic_detail' game.title topic.id%}">
                     <img class="topic_image_thumbnail" src="{{ topic.get_image }}" alt="image">
                 </a>
             </div>
             <div class="col-9 col-md-8">
                 <div class="card-header">
                     <div class="card-text"><small class="text-muted">
-                        <i class="fas fa-eye"></i>{{ topic.views }} view
+                        <i class="fas fa-eye"></i>{{ topic.views }}
                         <i class="fas fa-comment-dots"></i>{{ topic.get_reply_count }}
                         <i class="fas fa-clock"></i>{{ topic.last_updated|naturaltime }}
                     </small>
@@ -50,7 +47,7 @@
                 <div class="card-body">
                     <div class="topic-list-userinfo">
                         <span class="card-text mr-2">
-                            <img class="topic-list-image_thumbnail" src="{{ topic.starter.get_image_thumbnail }}"
+                            <img class="image-thumbnail" src="{{ topic.starter.get_image }}"
                                  alt="image">
                             {{ topic.starter.username }}
                         </span>
@@ -60,8 +57,8 @@
                         {% endfor %}
                     </div>
                     <p class="card-text topic-list-body mt-1">
-                        <a href="{% url 'Board:topic_detail' topic.id%}">
-                            {{ topic.formatted_markdown|safe|truncatechars:40}}</a>
+                        <a href="{% url 'Board:topic_detail' game.title topic.id%}">
+                            {{ topic.contents|remove_html_tags|truncatechars:40}}</a>
                     </p>
                 </div>
             </div>

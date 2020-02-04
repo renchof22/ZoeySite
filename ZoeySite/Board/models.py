@@ -16,6 +16,15 @@ repeater = re.compile(pattern)
 
 DEFAULT_IMAGE = "../../media/default/no_image.png"
 
+class Game(models.Model):
+    title = models.CharField(max_length=32, choices=GAME_LIST, null=True)
+    def __str__(self):
+        return "{0}".format(self.title)
+
+    def get_game_image(self):
+        return "url(../game/{0}.png);".format(self.title)
+
+
 class Tag(models.Model):
     """
     This model associate with Topic.
@@ -36,15 +45,11 @@ class Topic(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     contents = MarkdownxField('Contents')
     last_updated = models.DateTimeField(default=timezone.now)
-    starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='topics', on_delete=models.SET_NULL, null=True)
+    starter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_topics', on_delete=models.SET_NULL, null=True)
     views = models.PositiveIntegerField(default=0)
-    game = models.CharField(max_length=32, choices=GAME_LIST, null=True)
+    game = models.ForeignKey(Game, related_name="game_topics", on_delete=models.SET_NULL, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
     image = models.ImageField(upload_to='topic_images', blank=True, null=True)
-    image_thumbnail = ImageSpecField(source='image',
-                                     processors=[ResizeToFill(50, 50)],
-                                     format='JPEG',
-                                     options={'quality': 60})
 
     objects = models.Manager()
 
@@ -57,17 +62,8 @@ class Topic(models.Model):
         else:
             return self.image.url
 
-    def get_image_thumbnail(self):
-        if not self.image_thumbnail:
-            return DEFAULT_IMAGE
-        else:
-            return self.image_thumbnail.url
-
     def get_reply_count(self):
         return self.posts.count()
-
-    def formatted_markdown(self):
-        return markdownify(self.contents)
 
     def get_tags(self):
         return self.tags.all()
